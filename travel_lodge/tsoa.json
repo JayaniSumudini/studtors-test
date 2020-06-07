@@ -1,0 +1,21 @@
+{
+  "swagger": {
+    "outputDirectory": "./build",
+    "entryFile": "./src/index.ts",
+    "host": "localhost:3000",
+    "basePath": "/travel",
+    "noImplicitAdditionalProperties": "silently-remove-extras"
+  },
+  "entryFile": "src/index.ts",
+  "noImplicitAdditionalProperties": "silently-remove-extras",
+  "controllerPathGlobs": ["src/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3
+  },
+  "routes": {
+    "entryFile": "./src/index.ts",
+    "routesDir": "./src",
+    "basePath": "/travel"
+  }
+}

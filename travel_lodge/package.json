@@ -1,0 +1,37 @@
+{
+  "name": "travel_lodge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon",
+    "start": "npm run build && node ./build/index.js",
+    "build": "npm run clean && npm run lint &&npm run swagger-gen && npm run routes-gen && tsc",
+    "lint": "tslint ./src/**/*.ts",
+    "clean": "rimraf build",
+    "routes-gen": "tsoa routes",
+    "swagger-gen": "tsoa swagger",
+    "tsoa": "tsoa"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/express": "^4.17.6",
+    "@types/node": "^14.0.11",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.1.4",
+    "tslint": "^6.1.2",
+    "tsoa": "^3.1.1"
+  }
+}
