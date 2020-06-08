@@ -1,0 +1,32 @@
+{
+  "swagger": {
+    "outputDirectory": "./dist",
+    "entryFile": "./src/index.ts",
+    "host": "35.172.223.128:3001",
+    "basePath": "/v1",
+    "noImplicitAdditionalProperties": "silently-remove-extras"
+  },
+  "spec": {
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "access_token",
+        "in": "query"
+      },
+      "jwt": {
+        "name": "jwt",
+        "type": "jwt",
+        "scopes": {
+          "client:access": "client access",
+          "vendor:access": "vendor access"
+        }
+      }
+    }
+  },
+  "routes": {
+    "basePath": "/v1",
+    "entryFile": "./src/index.ts",
+    "routesDir": "./src",
+    "authenticationModule": "./src/authentication.ts"
+  }
+}

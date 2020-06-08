@@ -1,0 +1,16 @@
+service: studtors
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  role: arn:aws:iam::346861296468:role/dynamodb-to-es
+  vpc:
+    securityGroupIds:
+      - sg-0b3ea373a9b82f5e1
+    subnetIds:
+      - subnet-095d5459894c19cbd
+      - subnet-0174066dd4c7c9017
+functions:
+  es:
+    handler: handler.es

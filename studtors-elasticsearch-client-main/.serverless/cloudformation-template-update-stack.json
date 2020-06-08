@@ -1,0 +1,118 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EsLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/studtors-dev-es"
+      }
+    },
+    "EsLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/studtors/dev/1591200105683-2020-06-03T16:01:45.683Z/studtors.zip"
+        },
+        "FunctionName": "studtors-dev-es",
+        "Handler": "handler.es",
+        "MemorySize": 1024,
+        "Role": "arn:aws:iam::346861296468:role/dynamodb-to-es",
+        "Runtime": "nodejs12.x",
+        "Timeout": 6,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            "sg-0b3ea373a9b82f5e1"
+          ],
+          "SubnetIds": [
+            "subnet-095d5459894c19cbd",
+            "subnet-0174066dd4c7c9017"
+          ]
+        }
+      },
+      "DependsOn": [
+        "EsLogGroup"
+      ]
+    },
+    "EsLambdaVersionkbGkZ795hOWqZMg4IiuiXISDeTGWqmDNAHDQjCqaI": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "EsLambdaFunction"
+        },
+        "CodeSha256": "8aWISTEFAkbygAQsUA+wYijqpkrpeIeyDzSnDuen//o="
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      }
+    },
+    "EsLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "EsLambdaVersionkbGkZ795hOWqZMg4IiuiXISDeTGWqmDNAHDQjCqaI"
+      }
+    }
+  }
+}

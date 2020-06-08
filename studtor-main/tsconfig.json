@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "types": ["reflect-metadata"],
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
+  },
+  "files": [
+    "./node_modules/@types/mocha/index.d.ts",
+    "./node_modules/@types/node/index.d.ts",
+    "./node_modules/@types/uuid/index.d.ts"
+  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
