@@ -10,6 +10,7 @@ import {
   Delete,
   Patch,
   Path,
+  Query,
 } from 'tsoa';
 import 'reflect-metadata';
 
@@ -22,7 +23,7 @@ import {
 } from '../models/vendor';
 import { VendorService } from '../services/vendorService';
 import DIContainer from '../di-container';
-import { APIResponse } from '../models/apiResponse';
+import { APIResponse, QueryFilters } from '../models/apiResponse';
 
 @Route('vendor')
 export class VendorController extends SuperController {
@@ -197,6 +198,22 @@ export class VendorController extends SuperController {
   ): Promise<APIResponse> {
     return this.vendorService
       .getAllBookingDetailsForVendor(vendorId)
+      .then((result) => this.sendResponse(result))
+      .catch((error) => this.sendResponse(error));
+  }
+
+  /**
+   * Search vendors for customers
+   */
+  @Security('jwt', ['client:access'])
+  @Get('search/{searchParams}')
+  @Tags('Vendor')
+  /**
+   * @todo path is not matched correctly. need to check and fix it.
+   */
+  public async searchVendors(@Query() searchParams?: string): Promise<APIResponse> {
+    return this.vendorService
+      .searchVendors(searchParams)
       .then((result) => this.sendResponse(result))
       .catch((error) => this.sendResponse(error));
   }

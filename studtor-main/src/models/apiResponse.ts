@@ -3,3 +3,6 @@ export interface APIResponse {
   data?: any;
   errors?: any;
 }
+export interface QueryFilters {
+  [x: string]: string;
+}

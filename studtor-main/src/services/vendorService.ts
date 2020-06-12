@@ -32,6 +32,8 @@ import { Nationality } from '../models/nationality';
 
 import moment = require('moment');
 import { CommonUtil } from '../util/commonUtil';
+import { ElasticSearchAdapterImpl } from '../dependency/database/elasticSearch/elasticSearchAdapterImpl';
+import { QueryFilters } from '../models/apiResponse';
 const secret = process.env.JWT_SECRET || 'my@#$secret';
 
 @injectable()
@@ -39,6 +41,7 @@ export class VendorService {
   private db: DynamoDbAdapterImpl;
   private fileHandler: S3FileHandlerImpl;
   private mailHandler: SesMailHandlerImpl;
+  private elasticSearch: ElasticSearchAdapterImpl;
 
   private validation: Validation = DIContainer.resolve<Validation>(Validation);
   private commonUtil: CommonUtil = DIContainer.resolve<CommonUtil>(CommonUtil);
@@ -51,10 +54,12 @@ export class VendorService {
     @inject(DynamoDbAdapterImpl) dbAdapter: DynamoDbAdapterImpl,
     @inject(S3FileHandlerImpl) imageUploader: S3FileHandlerImpl,
     @inject(SesMailHandlerImpl) mailHandler: SesMailHandlerImpl,
+    @inject(ElasticSearchAdapterImpl) elasticSearch: ElasticSearchAdapterImpl,
   ) {
     this.db = dbAdapter;
     this.fileHandler = imageUploader;
     this.mailHandler = mailHandler;
+    this.elasticSearch = elasticSearch;
   }
 
   public async createVendor(newVendorDetails: VendorDetailsCreateRequest): Promise<CustomResponse> {
@@ -996,6 +1001,31 @@ export class VendorService {
           .status(200)
           .message('Get Vendor Locations Success')
           .data(locationDetails)
+          .build(),
+      );
+    });
+  }
+
+  public async searchVendors(searchParams: string): Promise<CustomResponse> {
+    // var searchParam = 'searchParams?fullname=jayani&yearsOfExperience=4';
+
+    let vendors: any[];
+    await this.elasticSearch
+      .search(TableTypes.VENDOR_DETAILS, searchParams)
+      .then((result) => (vendors = result))
+      .catch((error) => {
+        console.log(error);
+        return new Promise((resolve, reject) => {
+          reject(new CustomResponseBuilder().status(422).message('Vendor Search Error').build());
+        });
+      });
+
+    return new Promise((resolve, reject) => {
+      resolve(
+        new CustomResponseBuilder()
+          .status(200)
+          .message('Get Vendor Locations Success')
+          .data(vendors)
           .build(),
       );
     });
